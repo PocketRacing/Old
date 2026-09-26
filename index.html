@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Мир Главного</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#101114;
+    color:#fff;
+}
+header{
+    background:#181a20;
+    padding:18px;
+    border-bottom:1px solid #30333b;
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+h1{margin:0 0 5px;font-size:25px}
+header small{color:#9da3ad}
+
+nav{
+    display:flex;
+    gap:8px;
+    overflow:auto;
+    padding:10px;
+    background:#15171c;
+}
+nav button{
+    white-space:nowrap;
+    background:#252830;
+    color:white;
+    border:0;
+    border-radius:10px;
+    padding:11px 15px;
+    cursor:pointer;
+}
+nav button.active{background:#fff;color:#111}
+
+main{max-width:1200px;margin:auto;padding:15px}
+
+.page{display:none}
+.page.active{display:block}
+
+.card{
+    background:#191b21;
+    border:1px solid #30333b;
+    border-radius:15px;
+    padding:15px;
+    margin-bottom:12px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:12px;
+}
+
+button,.btn{
+    background:#2a2e38;
+    border:0;
+    color:white;
+    padding:10px 13px;
+    border-radius:9px;
+    cursor:pointer;
+    margin:3px;
+}
+button:hover{background:#3a3f4b}
+
+input,select{
+    width:100%;
+    padding:11px;
+    border-radius:9px;
+    border:1px solid #3a3d45;
+    background:#101216;
+    color:white;
+    margin:5px 0 10px;
+}
+
+.stick{
+    height:100px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:70px;
+}
+.car{
+    font-size:65px;
+    text-align:center;
+    padding:10px;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 8px;
+    border-radius:7px;
+    background:#292d36;
+    margin:3px;
+    font-size:12px;
+}
+
+.green{background:#174d32}
+.yellow{background:#66551b}
+.red{background:#652525}
+.gray{background:#3b3d43}
+
+.log{
+    border-left:3px solid #666;
+    padding:8px 12px;
+    margin:7px 0;
+    color:#c9ccd2;
+}
+
+.big{
+    font-size:32px;
+    font-weight:bold;
+}
+
+.team{
+    border:1px solid #353941;
+    border-radius:13px;
+    padding:12px;
+}
+
+.fightbox{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+@media(max-width:650px){
+    .fightbox{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>👑 Мир Главного</h1>
+    <small>Ты управляешь всем происходящим</small>
+</header>
+
+<nav>
+    <button class="active" onclick="showPage('home',this)">Главная</button>
+    <button onclick="showPage('people',this)">👤 Люди</button>
+    <button onclick="showPage('cars',this)">🚗 Машины</button>
+    <button onclick="showPage('events',this)">⚡ События</button>
+    <button onclick="showPage('fight',this)">⚔️ Стычка</button>
+    <button onclick="showPage('awards',this)">🏅 Медали</button>
+    <button onclick="showPage('mine',this)">⛏️ Шахта</button>
+    <button onclick="showPage('grave',this)">⚰️ Кладбище</button>
+    <button onclick="showPage('history',this)">📜 История</button>
+</nav>
+
+<main>
+
+<!-- ГЛАВНАЯ -->
+<section id="home" class="page active">
+
+<div class="card">
+    <div class="big">👑 Главный</div>
+    <p>Все знают тебя. Ты можешь создавать людей, машины и события.</p>
+</div>
+
+<div class="grid">
+    <div class="card">
+        <div class="big" id="peopleCount">0</div>
+        👤 Живых людей
+    </div>
+
+    <div class="card">
+        <div class="big" id="carCount">0</div>
+        🚗 Машин
+    </div>
+
+    <div class="card">
+        <div class="big" id="deadCount">0</div>
+        ⚰️ Погибших
+    </div>
+
+    <div class="card">
+        <div class="big" id="awardCount">0</div>
+        🏅 Медалей
+    </div>
+</div>
+
+<div class="card">
+    <h2>⚡ Быстрые события</h2>
+    <button onclick="quickEvent('🏦 Произошло событие в банке')">🏦 Банк</button>
+    <button onclick="quickEvent('💰 Событие с инкассаторами')">💰 Инкассаторы</button>
+    <button onclick="quickEvent('🚛 Событие с фурой')">🚛 Фура</button>
+    <button onclick="quickEvent('⛏️ Началась работа в шахте')">⛏️ Шахта</button>
+    <button onclick="quickEvent('🚗 Машина отправлена на свалку')">🚗 Свалка</button>
+</div>
+
+</section>
+
+
+<!-- ЛЮДИ -->
+<section id="people" class="page">
+
+<div class="card">
+<h2>👤 Создать персонажа</h2>
+
+<input id="personName" placeholder="Имя">
+<input id="personRole" placeholder="Профессия / роль">
+
+<select id="personTeam">
+<option>Гражданские</option>
+<option>Спецназ</option>
+<option>Террористы</option>
+<option>Полиция</option>
+<option>Медики</option>
+<option>Рабочие</option>
+</select>
+
+<select id="personRank">
+<option>Новичок</option>
+<option>Рядовой</option>
+<option>Сержант</option>
+<option>Лейтенант</option>
+<option>Капитан</option>
+<option>Майор</option>
+<option>Полковник</option>
+<option>Генерал</option>
+</select>
+
+<button onclick="addPerson()">➕ Добавить</button>
+</div>
+
+<div id="peopleList"></div>
+
+</section>
+
+
+<!-- МАШИНЫ -->
+<section id="cars" class="page">
+
+<div class="card">
+<h2>🚗 Добавить машину</h2>
+
+<input id="carName" placeholder="Название машины">
+
+<select id="carType">
+<option>Легковая</option>
+<option>Внедорожник</option>
+<option>Патрульная</option>
+<option>🚑 Скорая</option>
+<option>🚒 Пожарная</option>
+<option>🚛 Фура</option>
+<option>💰 Инкассаторская</option>
+<option>Спецтехника</option>
+</select>
+
+<button onclick="addCar()">➕ Добавить</button>
+</div>
+
+<div id="carsList"></div>
+
+</section>
+
+
+<!-- СОБЫТИЯ -->
+<section id="events" class="page">
+
+<div class="card">
+<h2>⚡ Создать событие</h2>
+
+<input id="eventText" placeholder="Что произошло?">
+
+<button onclick="addEvent()">Создать событие</button>
+
+<hr>
+
+<button onclick="bankEvent()">🏦 Ограбление банка</button>
+<button onclick="cashEvent()">💰 Инкассаторы</button>
+<button onclick="truckEvent()">🚛 Фура</button>
+<button onclick="scrapEvent()">🔧 Разбор машины</button>
+</div>
+
+<div id="eventList"></div>
+
+</section>
+
+
+<!-- СТЫЧКА -->
+<section id="fight" class="page">
+
+<div class="card">
+<h2>⚔️ Стычка 50/50</h2>
+<p>
+Игровое случайное событие между двумя командами.
+Нажимай на участника, чтобы определить его состояние.
+</p>
+
+<div class="fightbox">
+
+<div class="team">
+<h3>🛡️ Спецназ</h3>
+<div id="specialTeam"></div>
+</div>
+
+<div class="team">
+<h3>☠️ Террористы</h3>
+<div id="terrorTeam"></div>
+</div>
+
+</div>
+
+<button onclick="startFight()">🎲 Новая стычка 50/50</button>
+<div id="fightResult"></div>
+</div>
+
+</section>
+
+
+<!-- МЕДАЛИ -->
+<section id="awards" class="page">
+
+<div class="card">
+<h2>🏅 Вручить медаль</h2>
+
+<select id="awardPerson"></select>
+
+<select id="awardType">
+<option>🏅 За отвагу</option>
+<option>🎖️ За службу</option>
+<option>⭐ За заслуги</option>
+<option>🏆 За победу</option>
+<option>🛟 За спасение</option>
+</select>
+
+<button onclick="giveAward()">Вручить</button>
+</div>
+
+<div id="awardList"></div>
+
+</section>
+
+
+<!-- ШАХТА -->
+<section id="mine" class="page">
+
+<div class="card">
+<h2>⛏️ Шахта</h2>
+
+<select id="minePerson"></select>
+
+<button onclick="mineWork()">⛏️ Ударить киркой</button>
+
+<div id="mineResult"></div>
+</div>
+
+</section>
+
+
+<!-- КЛАДБИЩЕ -->
+<section id="grave" class="page">
+
+<div class="card">
+<h2>⚰️ Кладбище</h2>
+<p>Здесь сохраняются погибшие персонажи.</p>
+</div>
+
+<div id="graveList"></div>
+
+</section>
+
+
+<!-- ИСТОРИЯ -->
+<section id="history" class="page">
+
+<div class="card">
+<h2>📜 История мира</h2>
+<button onclick="clearHistory()">Очистить историю</button>
+</div>
+
+<div id="historyList"></div>
+
+</section>
+
+</main>
+
+
+<script>
+
+let people = JSON.parse(localStorage.getItem("people") || "[]");
+let cars = JSON.parse(localStorage.getItem("cars") || "[]");
+let awards = JSON.parse(localStorage.getItem("awards") || "[]");
+let events = JSON.parse(localStorage.getItem("events") || "[]");
+
+function save(){
+    localStorage.setItem("people",JSON.stringify(people));
+    localStorage.setItem("cars",JSON.stringify(cars));
+    localStorage.setItem("awards",JSON.stringify(awards));
+    localStorage.setItem("events",JSON.stringify(events));
+    render();
+}
+
+function time(){
+    return new Date().toLocaleString("ru-RU");
+}
+
+function log(text){
+    events.unshift({
+        text:text,
+        time:time()
+    });
+    save();
+}
+
+function quickEvent(text){
+    log(text);
+}
+
+function showPage(id,btn){
+
+    document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+
+    document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
+    btn.classList.add("active");
+
+    render();
+}
+
+
+/* ЛЮДИ */
+
+function addPerson(){
+
+    let name=document.getElementById("personName").value.trim();
+    if(!name)return alert("Введи имя");
+
+    people.push({
+        id:Date.now(),
+        name:name,
+        role:document.getElementById("personRole").value || "Без профессии",
+        team:document.getElementById("personTeam").value,
+        rank:document.getElementById("personRank").value,
+        status:"Жив",
+        awards:[],
+        mine:0
+    });
+
+    document.getElementById("personName").value="";
+    document.getElementById("personRole").value="";
+
+    log("👤 Создан персонаж: "+name);
+}
+
+function injurePerson(id){
+
+    let p=people.find(x=>x.id===id);
+    if(!p || p.status==="Погиб")return;
+
+    let results=[
+        "Лёгкое ранение",
+        "Тяжёлое ранение",
+        "Критическое состояние",
+        "Выбыл из события"
+    ];
+
+    p.status=results[Math.floor(Math.random()*results.length)];
+
+    if(p.status==="Критическое состояние"){
+        if(Math.random()<0.35){
+            p.status="Погиб";
+        }
+    }
+
+    log("⚔️ "+p.name+" получил состояние: "+p.status);
+}
+
+function promote(id){
+
+    let p=people.find(x=>x.id===id);
+    if(!p)return;
+
+    let ranks=[
+        "Новичок",
+        "Рядовой",
+        "Сержант",
+        "Лейтенант",
+        "Капитан",
+        "Майор",
+        "Полковник",
+        "Генерал"
+    ];
+
+    let i=ranks.indexOf(p.rank);
+
+    if(i<ranks.length-1){
+        p.rank=ranks[i+1];
+        log("🎖️ "+p.name+" повышен до звания: "+p.rank);
+    }
+}
+
+
+/* МАШИНЫ */
+
+function addCar(){
+
+    let name=document.getElementById("carName").value.trim();
+    if(!name)return alert("Введи название");
+
+    cars.push({
+        id:Date.now(),
+        name:name,
+        type:document.getElementById("carType").value,
+        status:"Исправна"
+    });
+
+    document.getElementById("carName").value="";
+    log("🚗 Добавлена машина: "+name);
+}
+
+function damageCar(id){
+
+    let c=cars.find(x=>x.id===id);
+    if(!c)return;
+
+    c.status="Повреждена";
+    log("💥 Машина "+c.name+" повреждена");
+}
+
+function scrapCar(id){
+
+    let c=cars.find(x=>x.id===id);
+    if(!c)return;
+
+    c.status="На свалке";
+    log("🔧 "+c.name+" отправлена на свалку. Получен металл.");
+}
+
+
+/* СОБЫТИЯ */
+
+function addEvent(){
+
+    let t=document.getElementById("eventText").value.trim();
+    if(!t)return;
+
+    log("⚡ "+t);
+    document.getElementById("eventText").value="";
+}
+
+function bankEvent(){
+    log("🏦 Началось ограбление банка.");
+}
+
+function cashEvent(){
+    log("💰 Произошло событие с инкассаторами.");
+}
+
+function truckEvent(){
+    log("🚛 Произошло событие с фурой.");
+}
+
+function scrapEvent(){
+    log("🔧 Автомобиль отправлен на разбор.");
+}
+
+
+/* СТЫЧКА */
+
+let fightParticipants=[];
+
+function startFight(){
+
+    let special=people.filter(p=>p.team==="Спецназ" && p.status!=="Погиб");
+    let terror=people.filter(p=>p.team==="Террористы" && p.status!=="Погиб");
+
+    fightParticipants=[
+        ...special.slice(0,5),
+        ...terror.slice(0,5)
+    ];
+
+    renderFight();
+
+    document.getElementById("fightResult").innerHTML=
+        "<p>🎲 Стычка началась. Нажимай на участников.</p>";
+
+    log("⚔️ Началась стычка: Спецназ против террористов.");
+}
+
+function hitFight(id){
+
+    let p=people.find(x=>x.id===id);
+    if(!p)return;
+
+    let states=[
+        "Без последствий",
+        "Лёгкое ранение",
+        "Тяжёлое ранение",
+        "Критическое состояние",
+        "Выбыл"
+    ];
+
+    let state=states[Math.floor(Math.random()*states.length)];
+
+    if(state==="Выбыл"){
+        if(Math.random()<0.5){
+            p.status="Погиб";
+        }else{
+            p.status="Тяжёлое ранение";
+        }
+    }else{
+        p.status=state;
+    }
+
+    log("⚔️ "+p.name+" — "+p.status);
+
+    renderFight();
+}
+
+function renderFight(){
+
+    let s=document.getElementById("specialTeam");
+    let t=document.getElementById("terrorTeam");
+
+    if(!s)return;
+
+    s.innerHTML="";
+    t.innerHTML="";
+
+    fightParticipants
+    .filter(p=>p.team==="Спецназ")
+    .forEach(p=>{
+        s.innerHTML+=`
+        <div class="card">
+            👤 <b>${p.name}</b><br>
+            🎖️ ${p.rank}<br>
+            <span class="badge">${p.status}</span>
+            <button onclick="hitFight(${p.id})">👆 Тап</button>
+        </div>`;
+    });
+
+    fightParticipants
+    .filter(p=>p.team==="Террористы")
+    .forEach(p=>{
+        t.innerHTML+=`
+        <div class="card">
+            👤 <b>${p.name}</b><br>
+            🎖️ ${p.rank}<br>
+            <span class="badge">${p.status}</span>
+            <button onclick="hitFight(${p.id})">👆 Тап</button>
+        </div>`;
+    });
+}
+
+
+/* МЕДАЛИ */
+
+function giveAward(){
+
+    let id=Number(document.getElementById("awardPerson").value);
+    let p=people.find(x=>x.id===id);
+
+    if(!p)return;
+
+    let type=document.getElementById("awardType").value;
+
+    let award={
+        id:Date.now(),
+        person:id,
+        personName:p.name,
+        type:type,
+        time:time(),
+        status:"У владельца"
+    };
+
+    awards.push(award);
+    p.awards.push(award.id);
+
+    log("🏅 "+p.name+" получил медаль: "+type);
+}
+
+function sellAward(id){
+
+    let a=awards.find(x=>x.id===id);
+    if(!a)return;
+
+    a.status="Продана";
+    log("🏅 Медаль "+a.type+" персонажа "+a.personName+" была продана.");
+}
+
+
+/* ШАХТА */
+
+function mineWork(){
+
+    let id=Number(document.getElementById("minePerson").value);
+    let p=people.find(x=>x.id===id);
+
+    if(!p)return;
+
+    if(p.status==="Погиб"){
+        return alert("Этот персонаж погиб.");
+    }
+
+    p.mine++;
+
+    let resources=[
+        "⛏️ Уголь",
+        "🪨 Камень",
+        "⛓️ Железо",
+        "💎 Редкая руда"
+    ];
+
+    let resource=resources[Math.floor(Math.random()*resources.length)];
+
+    document.getElementById("mineResult").innerHTML=
+        `<div class="card">Ты ударил киркой и получил: <b>${resource}</b></div>`;
+
+    log("⛏️ "+p.name+" добыл "+resource);
+}
+
+
+/* ИСТОРИЯ */
+
+function clearHistory(){
+
+    if(confirm("Удалить всю историю?")){
+        events=[];
+        save();
+    }
+}
+
+
+/* ОТРИСОВКА */
+
+function render(){
+
+    document.getElementById("peopleCount").textContent=
+        people.filter(p=>p.status!=="Погиб").length;
+
+    document.getElementById("carCount").textContent=cars.length;
+
+    document.getElementById("deadCount").textContent=
+        people.filter(p=>p.status==="Погиб").length;
+
+    document.getElementById("awardCount").textContent=awards.length;
+
+
+    /* PEOPLE */
+
+    let pl=document.getElementById("peopleList");
+
+    pl.innerHTML="";
+
+    people.forEach(p=>{
+
+        let statusClass=
+            p.status==="Жив"?"green":
+            p.status==="Погиб"?"red":"yellow";
+
+        pl.innerHTML+=`
+        <div class="card">
+            <div class="stick">🧍</div>
+            <h2>${p.name}</h2>
+
+            <span class="badge">${p.role}</span>
+            <span class="badge">${p.team}</span>
+            <span class="badge">${p.rank}</span>
+            <span class="badge ${statusClass}">${p.status}</span>
+
+            <p>🏅 Медалей: ${p.awards.length}</p>
+            <p>⛏️ Добыто: ${p.mine}</p>
+
+            ${
+                p.status!=="Погиб"
+                ?`
+                <button onclick="injurePerson(${p.id})">⚔️ Событие</button>
+                <button onclick="promote(${p.id})">🎖️ Повысить</button>
+                `
+                :""
+            }
+        </div>`;
+    });
+
+
+    /* CARS */
+
+    let cl=document.getElementById("carsList");
+    cl.innerHTML="";
+
+    cars.forEach(c=>{
+        cl.innerHTML+=`
+        <div class="card">
+            <div class="car">
+                ${c.type.includes("Фура")?"🚛":
+                  c.type.includes("Инкас")?"💰":
+                  c.type.includes("Скорая")?"🚑":
+                  c.type.includes("Пожар")?"🚒":"🚗"}
+            </div>
+
+            <h2>${c.name}</h2>
+            <span class="badge">${c.type}</span>
+            <span class="badge">${c.status}</span>
+
+            <br>
+
+            <button onclick="damageCar(${c.id})">💥 Повредить</button>
+            <button onclick="scrapCar(${c.id})">🔧 На свалку</button>
+        </div>`;
+    });
+
+
+    /* AWARDS */
+
+    let ap=document.getElementById("awardPerson");
+    if(ap){
+        ap.innerHTML="";
+        people
+        .filter(p=>p.status!=="Погиб")
+        .forEach(p=>{
+            ap.innerHTML+=`<option value="${p.id}">${p.name}</option>`;
+        });
+    }
+
+    let al=document.getElementById("awardList");
+
+    if(al){
+        al.innerHTML="";
+
+        awards.forEach(a=>{
+            al.innerHTML+=`
+            <div class="card">
+                🏅 <b>${a.type}</b>
+                <br>
+                👤 ${a.personName}
+                <br>
+                <span class="badge">${a.status}</span>
+                <span class="badge">${a.time}</span>
+                <br>
+                ${
+                    a.status!=="Продана"
+                    ?`<button onclick="sellAward(${a.id})">💰 Продать</button>`
+                    :""
+                }
+            </div>`;
+        });
+    }
+
+
+    /* MINE */
+
+    let mp=document.getElementById("minePerson");
+
+    if(mp){
+        mp.innerHTML="";
+
+        people
+        .filter(p=>p.status!=="Погиб")
+        .forEach(p=>{
+            mp.innerHTML+=`<option value="${p.id}">${p.name}</option>`;
+        });
+    }
+
+
+    /* GRAVE */
+
+    let gl=document.getElementById("graveList");
+
+    if(gl){
+        gl.innerHTML="";
+
+        people
+        .filter(p=>p.status==="Погиб")
+        .forEach(p=>{
+            gl.innerHTML+=`
+            <div class="card">
+                <div class="stick">⚰️</div>
+                <h2>${p.name}</h2>
+                <p>${p.role}</p>
+                <span class="badge red">Погиб</span>
+            </div>`;
+        });
+    }
+
+
+    /* EVENTS */
+
+    let el=document.getElementById("eventList");
+
+    if(el){
+        el.innerHTML="";
+
+        events.forEach(e=>{
+            el.innerHTML+=`
+            <div class="log">
+                <b>${e.time}</b><br>
+                ${e.text}
+            </div>`;
+        });
+    }
+
+    renderFight();
+}
+
+render();
+
+</script>
+
+</body>
+</html>
